@@ -18,12 +18,31 @@ export default function Navbar() {
   const brochureUrl = '/brochure.pdf';
   const formUrl = conferenceData.registration.formUrl;
 
+  const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+
+      // Scrolled styling (shadow + glass blur)
+      setScrolled(currentScrollY > 20);
+
+      // Reveal ONLY when scrolling UP, hide when scrolling DOWN
+      if (currentScrollY <= 30) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        // Scrolling down -> hide
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up -> show
+        setVisible(true);
+      }
+
+      lastScrollY = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -42,72 +61,51 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 transition-all duration-300">
-      
-      {/* Official Institutional Brand Masthead — One Set At The Top */}
-      <div
-        className={`bg-[#ffffff] border-b border-black/[0.08] transition-all duration-300 overflow-hidden ${
-          scrolled ? 'max-h-0 py-0 opacity-0 border-b-0' : 'max-h-24 py-3 opacity-100'
-        }`}
-      >
-        <div className="max-w-[1280px] mx-auto px-6 flex items-center justify-between gap-4">
-          {/* Left: Official College Banner with Shield Crest & Affiliation */}
-          <a href="#" className="flex items-center gap-3 shrink-0 focus:outline-none">
-            <img
-              src="/mit-banner-hd.png"
-              alt="Maharaja Institute of Technology Mysore"
-              className="h-9 sm:h-11 w-auto object-contain"
-            />
-          </a>
-
-          {/* Right: Department of ECE & eMITERS Association Official Crest */}
-          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-            <div className="text-right hidden sm:block">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-[#000000] font-semibold leading-tight">
-                Department of ECE
-              </div>
-              <div className="text-[10px] text-[#0096f7] font-mono leading-tight mt-0.5">
-                eMITERS Association
-              </div>
-            </div>
-            <img
-              src="/emiters-logo-circle.png"
-              alt="eMITERS Association"
-              className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-xs"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Main Samara Architectural Nav */}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
+        visible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
+      {/* Main Architectural Nav — College Logo & Dept Logo Only */}
       <nav
         className={`transition-all duration-200 border-b border-black/[0.08] ${
           scrolled
-            ? 'bg-[#fdfdf7]/95 backdrop-blur-md shadow-subtle py-2.5'
-            : 'bg-[#fdfdf7]/90 backdrop-blur-md py-3'
+            ? 'bg-[#fdfdf7]/95 backdrop-blur-md shadow-subtle py-3'
+            : 'bg-[#fdfdf7]/95 backdrop-blur-md py-3.5'
         }`}
       >
         <div className="max-w-[1280px] mx-auto px-6">
           <div className="flex items-center justify-between">
             
-            {/* Left: Clean Single Crest & Conference Brand */}
-            <a href="#" className="flex items-center gap-2.5 group focus:outline-none">
-              <img
-                src="/mit-crest-hd.png"
-                alt="MIT Mysore Crest"
-                className="h-8 w-auto object-contain shrink-0 drop-shadow-2xs"
-              />
+            {/* Left: ONLY Official College Logo and Department Logo */}
+            <a href="#" className="flex items-center gap-3 group focus:outline-none shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
+                {/* College Logo */}
+                <img
+                  src="/mit-logo-circle.png"
+                  alt="Maharaja Institute of Technology Mysore Official Logo"
+                  className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-xs"
+                />
+                <span className="text-black/20 text-xs hidden sm:inline">|</span>
+                {/* Department Logo */}
+                <img
+                  src="/emiters-logo-circle.png"
+                  alt="eMITERS Department Logo"
+                  className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-xs"
+                />
+              </div>
+
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium tracking-tight text-[#000000] leading-none">
+                  <span className="text-lg sm:text-xl font-medium tracking-tight text-[#000000] leading-none">
                     RTECE 2026
                   </span>
                   <span className="text-[10px] font-mono uppercase bg-[#0096f7]/10 text-[#0096f7] px-2 py-0.5 rounded-[12px] font-semibold border border-[#0096f7]/20">
                     ECE
                   </span>
                 </div>
-                <span className="text-[10px] text-[#666666] font-mono leading-tight mt-0.5">
-                  National Conference
+                <span className="text-[10px] text-[#666666] font-mono leading-tight mt-1">
+                  MIT Mysore • Dept. of ECE
                 </span>
               </div>
             </a>

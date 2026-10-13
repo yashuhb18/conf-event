@@ -38,7 +38,7 @@ export default function Hero() {
   const formatNumber = (num) => String(num).padStart(2, '0');
 
   return (
-    <section id="hero" className="relative pt-10 pb-20 md:pt-14 md:pb-28 bg-[#fdfdf7] bg-blueprint-subtle overflow-hidden border-b border-black/[0.08]">
+    <section id="hero" className="relative pt-24 sm:pt-28 md:pt-32 pb-20 md:pb-28 bg-[#fdfdf7] bg-blueprint-subtle overflow-hidden border-b border-black/[0.08]">
       <div className="max-w-[1280px] mx-auto px-6 relative z-10">
         
         {/* Top Eyebrow / Model Specs */}
